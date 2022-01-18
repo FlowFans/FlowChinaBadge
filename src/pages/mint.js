@@ -108,7 +108,7 @@ export default function NFTDetails() {
                     <div {...getRootProps({ className: "dropzone" })}>
                       <input {...getInputProps()} />
                       <p>
-                        Drag 'n' drop an image here, or click to select a file
+                        Drag and drop an image here, or click to select a file
                       </p>
                     </div>
                   </section>
