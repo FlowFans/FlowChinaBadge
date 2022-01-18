@@ -1,2 +1,4 @@
 .env
 freshdb
+node_modules
+package-lock.json
