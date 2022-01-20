@@ -1,5 +1,5 @@
-import FlowChinaBadge from "../contracts/FlowChinaBadge.cdc"
-import NFTQueueDrop from "../contracts/NFTQueueDrop.cdc"
+import FlowChinaBadge from "../../contracts/FlowChinaBadge.cdc"
+import NFTQueueDrop from "../../contracts/NFTQueueDrop.cdc"
 
 pub struct Drop {
 
