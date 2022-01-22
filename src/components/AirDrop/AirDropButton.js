@@ -5,7 +5,7 @@ function getColor(error) {
 function getText(nftId, isLoading, error) {
   if (error) return "Error";
   if (isLoading) return "Loading...";
-  return `Claim NFT #${nftId}`;
+  return `Claim`;
 }
 
 function getDisabled(isLoading, error) {
@@ -24,7 +24,7 @@ export default function AirDropButton({
 
   return (
     <button
-      className={`${color} ${disabled && "disabled:opacity-50"} text-xl text-white px-4 py-3 mx-2 rounded-md`}
+      className={`${color} ${disabled && "disabled:opacity-50"} text-xl text-white px-12 py-3 mx-2 rounded-md`}
       onClick={onClick}
       disabled={disabled}>
       {text}
