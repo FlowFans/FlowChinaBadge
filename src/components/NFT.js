@@ -35,7 +35,7 @@ export default function NFT({ nft }) {
   }
 
   if (metadata.doesNotExist) {
-    return <div>NFT #{nft.tokenId} has not been revealed.</div>
+    return <div>NFT #{nft.tokenId} has been minted. Please wait a moment and refresh the page.</div>
   }
 
   return (
