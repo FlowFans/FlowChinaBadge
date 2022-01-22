@@ -11,7 +11,7 @@ export default function Header({ user }) {
       <div className="container flex flex-row items-center mx-auto">
         <div className="flex-grow">
           <Link href="/">
-            <a>{appName} NFT Drop</a>
+            <a>{appName} NFT</a>
           </Link>
         </div>
         <AuthCluster user={user} />

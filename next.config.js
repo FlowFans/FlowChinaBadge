@@ -46,7 +46,7 @@ module.exports = {
     return config;
   },
   publicRuntimeConfig: {
-    appName: "FlowChinaBadge",
+    appName: "FlowFans Badge",
     pinningServiceKey: process.env.PINNING_SERVICE_KEY,
     ...getConfig(process.env.NETWORK)
   }

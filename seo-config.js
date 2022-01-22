@@ -4,7 +4,7 @@ const {
   publicRuntimeConfig: { appName }
 } = getConfig();
 
-const title = `${appName} NFT Drop`;
+const title = `${appName} NFT`;
 
 export default {
   noindex: true, // Remove this before going live.

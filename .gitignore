@@ -2,3 +2,5 @@
 freshdb
 node_modules
 package-lock.json
+ipfs-data/*
+.next

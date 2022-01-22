@@ -18,7 +18,7 @@ function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>{appName} NFT Drop</title>
+        <title>{appName} NFT</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
