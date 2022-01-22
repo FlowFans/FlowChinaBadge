@@ -19,7 +19,7 @@ const testnetConfig = {
 };
 
 const mainnetConfig = {
-  flowAccessAPI: "https://access.mainnet.nodes.onflow.org:9000",
+  flowAccessAPI: "https://access-mainnet-beta.onflow.org",
   fclWalletDiscovery: "https://fcl-discovery.onflow.org/authn",
   nonFungibleTokenAddress: "0x1d7e57aa55817448",
   fungibleTokenAddress: "0xf233dcee88fe0abe",
