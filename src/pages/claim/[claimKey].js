@@ -17,6 +17,16 @@ export default function Claim() {
 
   const user = useCurrentUser();
 
+  let airdrop
+  if (user?.loggedIn) {
+    airdrop = <AirDrop
+      dropAddress={projectAdminAddress}
+      nftId={nftId} 
+      privateKey={privateKey} />
+  } else {
+    airdrop = <></>
+  }
+
   return (
     <div className="flex flex-col h-screen">
 
@@ -29,10 +39,7 @@ export default function Claim() {
 
         <div className="flex flex-col items-center pt-4">
           <DropImage />
-          <AirDrop
-            dropAddress={projectAdminAddress}
-            nftId={nftId} 
-            privateKey={privateKey} />
+          {airdrop}
         </div>
       </div>
     </div>
