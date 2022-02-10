@@ -1,5 +1,5 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
-import FungibleToken from "./FungibleToken.cdc"
+import MetadataViews from "./MetadataViews.cdc"
 
 pub contract FlowChinaBadge: NonFungibleToken {
 
@@ -22,7 +22,7 @@ pub contract FlowChinaBadge: NonFungibleToken {
     //
     pub var totalSupply: UInt64
 
-    pub resource NFT: NonFungibleToken.INFT {
+    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
 
         pub let id: UInt64
 
@@ -32,6 +32,26 @@ pub contract FlowChinaBadge: NonFungibleToken {
         init(id: UInt64, metadata: String) {
             self.id = id
             self.metadata = metadata
+        }
+
+        pub fun getViews(): [Type] {
+            return [
+                // Type<MetadataViews.Display>()
+            ]
+        }
+
+        pub fun resolveView(_ view: Type): AnyStruct? {
+            // switch view {
+            //     case Type<MetadataViews.Display>():
+            //         return MetadataViews.Display(
+            //             name: self.name,
+            //             description: self.description,
+            //             thumbnail: MetadataViews.HTTPFile(
+            //                 url: self.thumbnail
+            //             )
+            //         )
+            // }
+            return nil
         }
     }
 
@@ -47,7 +67,7 @@ pub contract FlowChinaBadge: NonFungibleToken {
         }
     }
 
-    pub resource Collection: FlowChinaBadgeCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource Collection: FlowChinaBadgeCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection {
         
         // dictionary of NFTs
         // NFT is a resource type with an `UInt64` ID field
@@ -107,6 +127,13 @@ pub contract FlowChinaBadge: NonFungibleToken {
             } else {
                 return nil
             }
+        }
+
+        // borrowViewResolver
+        // 
+        pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
+            let nft = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+            return nft as! &FlowChinaBadge.NFT
         }
 
         // destructor
@@ -191,3 +218,4 @@ pub contract FlowChinaBadge: NonFungibleToken {
         emit ContractInitialized()
     }
 }
+ 
