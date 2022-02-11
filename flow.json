@@ -37,6 +37,7 @@
         "mainnet": "0x1654653399040a61"
       }
     },
+    "IPFSMetadataRegistry": "cadence/contracts/IPFSMetadataRegistry.cdc",
     "FlowChinaBadge": "cadence/contracts/FlowChinaBadge.cdc",
     "NFTQueueDrop": "cadence/contracts/NFTQueueDrop.cdc",
     "NFTAirDrop": "cadence/contracts/NFTAirDrop.cdc"
@@ -59,6 +60,7 @@
         "MetadataViews",
         "NFTQueueDrop",
         "NFTAirDrop",
+        "IPFSMetadataRegistry",
         "FlowChinaBadge"
       ]
     }

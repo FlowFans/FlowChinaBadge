@@ -10,6 +10,7 @@
       "mainnet-account": [
         "NFTQueueDrop",
         "NFTAirDrop",
+        "IPFSMetadataRegistry",
         "FlowChinaBadge"
       ]
     }
