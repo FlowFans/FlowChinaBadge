@@ -5,7 +5,7 @@ pub contract IPFSMetadataRegistry {
     //
     pub event ContractInitialized()
     // Event that is emitted when metadata updated
-    pub event MetadataUpdated(owner: Address, cid: String)
+    pub event MetadataUpdated(owner: Address, uri: String)
 
     // Named Paths
     //
@@ -13,7 +13,7 @@ pub contract IPFSMetadataRegistry {
 
     // metadata
     // 
-    access(contract) var registeredIpfsMetadata: {String: StandardMetadata}
+    access(contract) var registeredIpfsMetadata: {String: IPFSMetadata}
     // mapped registors
     //
     access(contract) var mappedRegistorOwners: {String: Address}
@@ -118,32 +118,49 @@ pub contract IPFSMetadataRegistry {
       }
     }
 
+    // IPFSMetadata contains a metadata json data
+    // stored as an json file in IPFS.
+    //
+    pub struct IPFSMetadata {
+        // IPFS File object
+        pub let file: MetadataViews.IPFSFile
+
+        // metadata is the detail content of the IPFS file
+        pub let metadata: StandardMetadata
+
+        init(file: MetadataViews.IPFSFile, metadata: StandardMetadata) {
+            self.file = file
+            self.metadata = metadata
+        }
+    }
+
     pub resource Registor {
 
       // registerMetadata
       // Register a new metadata
       //
-      pub fun registerMetadata(cid: String, metadata: StandardMetadata) {
+      pub fun registerMetadata(ipfs: IPFSMetadata) {
         pre {
           self.owner != nil: "The owner of metadata registor should be not nil"
         }
 
-        let ownerAddress = self.owner!.address
+        let ownerAddress = self.owner!.address // owner address
+        let uri = ipfs.file.uri() // ipfs file uri
 
-        if IPFSMetadataRegistry.registeredIpfsMetadata[cid] != nil {
+        if IPFSMetadataRegistry.registeredIpfsMetadata[uri] != nil {
           // if metadata is registered, must be the owner.
-          assert(IPFSMetadataRegistry.mappedRegistorOwners.containsKey(cid), message: "The cid should be registered.")
-          assert(IPFSMetadataRegistry.mappedRegistorOwners[cid]! == ownerAddress, message: "owner should be same")
+          assert(IPFSMetadataRegistry.mappedRegistorOwners.containsKey(uri), message: "The uri should be registered.")
+          assert(IPFSMetadataRegistry.mappedRegistorOwners[uri]! == ownerAddress, message: "owner should be same")
         } else {
           // if metadata is empty, create new
-          IPFSMetadataRegistry.mappedRegistorOwners[cid] = ownerAddress
+          IPFSMetadataRegistry.mappedRegistorOwners[uri] = ownerAddress
         }
 
         // update metadata
-        IPFSMetadataRegistry.registeredIpfsMetadata[cid] = metadata
+        IPFSMetadataRegistry.registeredIpfsMetadata[uri] = ipfs
 
         // emit MetadataUpdated 
-        emit MetadataUpdated(owner: ownerAddress, cid: cid)
+        emit MetadataUpdated(owner: ownerAddress, uri: uri)
       }
     }
 
@@ -152,7 +169,7 @@ pub contract IPFSMetadataRegistry {
     // If does not contain the cid, return nil.
     // If contains the cid, return the metadata struct.
     //
-    pub fun fetchMetadata(cid: String): StandardMetadata? {
+    pub fun fetchMetadata(cid: String): IPFSMetadata? {
       return IPFSMetadataRegistry.registeredIpfsMetadata[cid]
     }
 
