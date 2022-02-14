@@ -4,6 +4,8 @@ pub contract IPFSMetadataRegistry {
     // Events
     //
     pub event ContractInitialized()
+    // Event that is emitted when metadata updated
+    pub event MetadataUpdated(owner: Address, cid: String)
 
     // Named Paths
     //
@@ -14,7 +16,7 @@ pub contract IPFSMetadataRegistry {
     access(contract) var registeredIpfsMetadata: {String: StandardMetadata}
     // mapped registors
     //
-    access(contract) var mappedRegistors: {String: Capability<&{Registor}>}
+    access(contract) var mappedRegistorOwners: {String: Address}
 
     // Type Definitions
     // 
@@ -116,18 +118,58 @@ pub contract IPFSMetadataRegistry {
       }
     }
 
-    pub resource interface Registor {}
+    pub resource Registor {
 
+      // registerMetadata
+      // Register a new metadata
+      //
+      pub fun registerMetadata(cid: String, metadata: StandardMetadata) {
+        pre {
+          self.owner != nil: "The owner of metadata registor should be not nil"
+        }
 
+        let ownerAddress = self.owner!.address
 
+        if IPFSMetadataRegistry.registeredIpfsMetadata[cid] != nil {
+          // if metadata is registered, must be the owner.
+          assert(IPFSMetadataRegistry.mappedRegistorOwners.containsKey(cid), message: "The cid should be registered.")
+          assert(IPFSMetadataRegistry.mappedRegistorOwners[cid]! == ownerAddress, message: "owner should be same")
+        } else {
+          // if metadata is empty, create new
+          IPFSMetadataRegistry.mappedRegistorOwners[cid] = ownerAddress
+        }
+
+        // update metadata
+        IPFSMetadataRegistry.registeredIpfsMetadata[cid] = metadata
+
+        // emit MetadataUpdated 
+        emit MetadataUpdated(owner: ownerAddress, cid: cid)
+      }
+    }
+
+    // fetchMetadata
+    // Get metadata from the contract, if available.
+    // If does not contain the cid, return nil.
+    // If contains the cid, return the metadata struct.
+    //
+    pub fun fetchMetadata(cid: String): StandardMetadata? {
+      return IPFSMetadataRegistry.registeredIpfsMetadata[cid]
+    }
+
+    // createNewRegistor
+    // public function that anyone can call to create a new registor
+    //
+    pub fun createNewRegistor(): @Registor {
+        return <- create Registor()
+    }
 
     init() {
       // Set named paths
       self.RegistorStoragePath = /storage/IPFSMetadataRegistor
 
       // contract data
-      self.mappedRegistors = {}
       self.registeredIpfsMetadata = {}
+      self.mappedRegistorOwners = {}
 
       emit ContractInitialized()
     }
