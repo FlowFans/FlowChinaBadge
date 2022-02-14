@@ -1,5 +1,6 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
 import MetadataViews from "./MetadataViews.cdc"
+import IPFSMetadataRegistry from "./IPFSMetadataRegistry.cdc"
 
 pub contract FlowChinaBadge: NonFungibleToken {
 
@@ -36,21 +37,29 @@ pub contract FlowChinaBadge: NonFungibleToken {
 
         pub fun getViews(): [Type] {
             return [
-                // Type<MetadataViews.Display>()
+                Type<MetadataViews.IPFSFile>(),
+                Type<IPFSMetadataRegistry.IPFSMetadata>()
             ]
         }
 
         pub fun resolveView(_ view: Type): AnyStruct? {
-            // switch view {
-            //     case Type<MetadataViews.Display>():
-            //         return MetadataViews.Display(
-            //             name: self.name,
-            //             description: self.description,
-            //             thumbnail: MetadataViews.HTTPFile(
-            //                 url: self.thumbnail
-            //             )
-            //         )
-            // }
+            let ipfsFile = MetadataViews.IPFSFile(
+                cid: self.metadata,
+                path: nil
+            )
+            switch view {
+                case Type<MetadataViews.IPFSFile>():
+                    return ipfsFile
+                case Type<IPFSMetadataRegistry.IPFSMetadata>():
+                    if let meta = IPFSMetadataRegistry.fetchMetadata(ipfsFile.uri()) {
+                        return meta
+                    } else {
+                        return IPFSMetadataRegistry.IPFSMetadata(
+                            file: ipfsFile,
+                            metadata: nil
+                        )
+                    }
+            }
             return nil
         }
     }

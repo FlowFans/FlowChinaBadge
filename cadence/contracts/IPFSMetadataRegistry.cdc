@@ -126,9 +126,9 @@ pub contract IPFSMetadataRegistry {
         pub let file: MetadataViews.IPFSFile
 
         // metadata is the detail content of the IPFS file
-        pub let metadata: StandardMetadata
+        pub let metadata: StandardMetadata?
 
-        init(file: MetadataViews.IPFSFile, metadata: StandardMetadata) {
+        init(file: MetadataViews.IPFSFile, metadata: StandardMetadata?) {
             self.file = file
             self.metadata = metadata
         }
@@ -141,7 +141,8 @@ pub contract IPFSMetadataRegistry {
       //
       pub fun registerMetadata(ipfs: IPFSMetadata) {
         pre {
-          self.owner != nil: "The owner of metadata registor should be not nil"
+          self.owner != nil: "The owner of metadata registor should be not nil."
+          ipfs.metadata != nil: "Register metadata should not be nil."
         }
 
         let ownerAddress = self.owner!.address // owner address
@@ -166,11 +167,11 @@ pub contract IPFSMetadataRegistry {
 
     // fetchMetadata
     // Get metadata from the contract, if available.
-    // If does not contain the cid, return nil.
-    // If contains the cid, return the metadata struct.
+    // If does not contain the uri, return nil.
+    // If contains the uri, return the metadata struct.
     //
-    pub fun fetchMetadata(cid: String): IPFSMetadata? {
-      return IPFSMetadataRegistry.registeredIpfsMetadata[cid]
+    pub fun fetchMetadata(uri: String): IPFSMetadata? {
+      return IPFSMetadataRegistry.registeredIpfsMetadata[uri]
     }
 
     // createNewRegistor
