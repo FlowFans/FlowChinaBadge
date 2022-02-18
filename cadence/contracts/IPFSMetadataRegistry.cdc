@@ -170,7 +170,7 @@ pub contract IPFSMetadataRegistry {
     // If does not contain the uri, return nil.
     // If contains the uri, return the metadata struct.
     //
-    pub fun fetchMetadata(uri: String): IPFSMetadata? {
+    pub fun fetchMetadata(_ uri: String): IPFSMetadata? {
       return IPFSMetadataRegistry.registeredIpfsMetadata[uri]
     }
 
