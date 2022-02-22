@@ -22,6 +22,20 @@ transaction(
     }
 
     execute {
+      var animation: IPFSMetadataRegistry.TypedIPFSFile? = nil
+
+      if animation_cid == nil {
+        animation = nil
+      } else {
+        animation = IPFSMetadataRegistry.TypedIPFSFile(
+          type: "video",
+          file: MetadataViews.IPFSFile(
+            cid: animation_cid!,
+            path: animation_path
+          )
+        )
+      }
+
       let ipfs = IPFSMetadataRegistry.IPFSMetadata(
         file: MetadataViews.IPFSFile(cid: cid, path: path),
         metadata: IPFSMetadataRegistry.StandardMetadata(
@@ -35,14 +49,9 @@ transaction(
             )
           ),
           image_data: image_data,
-          animation: animation_cid
-            ? MetadataViews.IPFSFile(
-              cid: animation_cid,
-              path: animation_path
-            )
-            : nil,
+          animation: animation,
           external_url: external_url,
-          // ignore attributes for now
+          attributes: [] // ignore attributes for now
         )
       )
       self.registor.registerMetadata(ipfs: ipfs)
