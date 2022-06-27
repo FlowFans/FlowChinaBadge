@@ -123,7 +123,7 @@ pub contract FlowChinaBadge: NonFungibleToken {
         // so that the caller can read its metadata and call its methods
         //
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
-            return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+            return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
         }
 
         // borrowFlowChinaBadge
@@ -131,7 +131,7 @@ pub contract FlowChinaBadge: NonFungibleToken {
         //
         pub fun borrowFlowChinaBadge(id: UInt64): &FlowChinaBadge.NFT? {
             if self.ownedNFTs[id] != nil {
-                let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+                let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT?
                 return ref as! &FlowChinaBadge.NFT
             } else {
                 return nil
@@ -141,7 +141,7 @@ pub contract FlowChinaBadge: NonFungibleToken {
         // borrowViewResolver
         // 
         pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
-            let nft = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+            let nft = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT?
             return nft as! &FlowChinaBadge.NFT
         }
 
